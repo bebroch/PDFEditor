@@ -8,44 +8,27 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using IronPdf;
-using System.Linq;
-using Image = System.Windows.Controls.Image;
-using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace PDFEditor
 {
     public partial class MainWindow : Window
     {
-        //private List<Bitmap> pagePDFInPng;// Массив в котором содержатся изображения всех листов документа
-        private ImageSource[] pagesPDFInImage;
-        private Bitmap[] pagesPDFInBitmap;
-        private PdfDocument document;
-        string[] paths;
-        private const int DPI = 96;
+        private ImageSource[] pagesPDFInImage; // Картинки в ImageSource формате
+        private Bitmap[] pagesPDFInBitmap; // Картинки в Bitmap формате
+        private PdfDocument document; // Сам документ (пока один)
+        string[] paths; // Пути до PDF файлов
+        private const int DPI = 96; // Качество картинок
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        // Кидаем в программу файл и выводим его.
+        // Функция активируется, когда пользователь кидает файл в программу
         private void MainPanel_Drop(object sender, DragEventArgs e)
         {
             paths = (string[])e.Data.GetData(DataFormats.FileDrop);
-            document = new PdfDocument(paths[0]);
-            pagesPDFInImage = new ImageSource[document.PageCount];
-            pagesPDFInBitmap = new Bitmap[document.PageCount];
-            allPages.Content = document.PageCount;
-            nowPage.Content = 1;
-            ActivateMenu();
-            ConvertPDFtoImage(0);
-        }
-
-        private void ImageSourceUpdatedLL(object sender, DataTransferEventArgs e)
-        {
-            canvas.Width = PictureBox.ActualWidth;
-            canvas.Height = PictureBox.ActualHeight;
+            SavePdfToImage(paths[0]);
         }
 
         // Функция активирует кнопки сверху, после загрузки файла
@@ -70,7 +53,11 @@ namespace PDFEditor
         {
             Bitmap imageBmp = new Bitmap(document.PageToBitmap(page, DPI)); // Выгружаем картинку страницы из файла
             pagesPDFInBitmap[page] = imageBmp; // Сохраняем лист в массив
-            BitmapSource imgsource = Imaging.CreateBitmapSourceFromHBitmap(imageBmp.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()); // Конвертируем из Bitmap в BitmapSource
+            BitmapSource imgsource = Imaging.CreateBitmapSourceFromHBitmap(
+                imageBmp.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions()
+            ); // Конвертируем из Bitmap в BitmapSource
+
             PictureBox.Source = imgsource; // Выводим картинку
             pagesPDFInImage[page] = imgsource; // Сохраняем лист в массив
         }
@@ -84,10 +71,11 @@ namespace PDFEditor
         // Переключение PDF по сраницам
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
+            e.Handled = true;
             KeyDown(e.Key);
         }
 
-        private int DPCPlus = 0; // Следующая страница, если она выходит за рамки то это 1 страница
+        private int DPCPlus = 0; // Следующая страница, если она выходит за рамки, то это 1 страница
         private int DPCMinus = 0; // Следующая страница, всё так же, как и с DPCPLus, только назад
         private int docPageCount = 0; // Текующая страница
 
@@ -96,27 +84,26 @@ namespace PDFEditor
         {
             if (document != null && (key == Key.Right || key == Key.Left))
             {
-                /*
+                /* Хочу сохранять все рисунки, что сделал пользователь, после переключения каждой страницы, типо было не на canvas и Image, а всё вместе, на Image
+                
                 RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap((int)PictureBox.ActualWidth, (int)PictureBox.ActualHeight, 96, 96, PixelFormats.Pbgra32);
                 renderTargetBitmap.Render(PictureBox);
 
                 BitmapSource bitmapSource = renderTargetBitmap;
-                bitmapSource.BeginInit();
+                bitmapSource.
                 bitmapSource.StreamSource.Write(PictureBox.Source);
                 bitmapSource.EndInit();
 
                 // Создать DrawingVisual и отрисовать линию
+
                 DrawingVisual drawingVisual = new DrawingVisual();
+                drawingVisual.Children.Add(lines);
                 using (DrawingContext drawingContext = drawingVisual.RenderOpen())
                 {
                     drawingContext.DrawLine(lines[0]);
                     drawingContext.
                 }
 
-                // Создать ImageSource из DrawingVisual
-                RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap(
-                    bitmapSource.PixelWidth, bitmapSource.PixelHeight,
-                    bitmapSource.DpiX, bitmapSource.DpiY, PixelFormats.Pbgra32);
                 renderTargetBitmap.Render(drawingVisual);
                 ImageSource imageSource = renderTargetBitmap;
 
@@ -142,8 +129,6 @@ namespace PDFEditor
                 else if (docPageCount > document.PageCount - 1)
                     docPageCount = 0;
 
-
-
                 nowPage.Content = (docPageCount + 1).ToString();
             }
 
@@ -158,11 +143,9 @@ namespace PDFEditor
         }
     }
 
+    // Класс, где содержатся все кнопки из меню, которое висит сверху, кроме "MenuSave"
     public partial class MainWindow
     {
-        // Сохраняем файл
-        private void MenuSave(object sender, RoutedEventArgs e) => SaveFile();
-
         // Сохраняем под новым именем 
         private void MenuSaveHow(object sender, RoutedEventArgs e)
         {
@@ -178,7 +161,14 @@ namespace PDFEditor
         // Открываем новый файл
         private void MenuOpen(object sender, RoutedEventArgs e)
         {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.DefaultExt = "*.pdf";
+            dlg.Filter = "PDF Files (*.pdf)|*.pdf";
 
+            if (dlg.ShowDialog() == true)
+            {
+                SavePdfToImage(dlg.FileName);
+            }
         }
 
         // Добавляем файл в новое окно
@@ -218,9 +208,16 @@ namespace PDFEditor
         }
     }
 
+    // Класс про сохранение файла (не работает)
     public partial class MainWindow
     {
-        // Функция дл сохранения файла
+        // Конпка в верхней строке, которая сохраняет файл
+        private void MenuSave(object sender, RoutedEventArgs e) => SaveFile();
+
+        // Кнопка, которая сохраняет pdf документ
+        private void SaveButt(object sender, RoutedEventArgs e) => SaveFile();
+
+        // Функция для сохранения файла
         private void SaveFile()
         {
             CountLineSigmentChangedPages();
@@ -231,7 +228,26 @@ namespace PDFEditor
             MessageBox.Show("Файл успешно сохранён!");
         }
 
-        List<Tuple<int, bool>> lineSigment;
+        // Сохраняем PDF файл и выводим его
+        private void SavePdfToImage(string path)
+        {
+            // Создаём документ по путю
+            document = new PdfDocument(path);
+            // Указываем размеры массива, где лежат все листы, в формате картинки
+            pagesPDFInImage = new ImageSource[document.PageCount];
+            // Так же указываем размеры массива, где лежат все листы, только уже в формате Bitmap
+            pagesPDFInBitmap = new Bitmap[document.PageCount];
+            // Отображаем сколько всего страниц в документе
+            allPages.Content = document.PageCount;
+            // Указываем начальную страницу какую страницу программа отрисует первой (по стандарту 1 страница)
+            nowPage.Content = 1;
+            // Активируем верхние кнопки, которые служат для редактирования 
+            ActivateMenu();
+            // Разбиваем PDF на листы и загружаем их в массив, у которого потом выводим 0 индекс (1 страницу документа)
+            ConvertPDFtoImage(0);
+        }
+
+        private List<Tuple<int, bool>> lineSigment;
 
         // Находим отрезки где есть и нету изменёных листов, пример [(0, true), (11, false)] от 0 до 10 лист изменён, а дальше чистые
         private void CountLineSigmentChangedPages()
@@ -272,54 +288,31 @@ namespace PDFEditor
         }
     }
 
+    // Класс, в котором реализовано рисование
     public partial class MainWindow
     {
-        // Кнопка, которая сохраняет pdf документ
-        private void SaveButt(object sender, RoutedEventArgs e) => SaveFile();
-
-        // Кнопка, которая добавляет строку 
-        private void AddLineButt(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        // Кнопка, которая добавляет картинку 
-        private void AddImageButt(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         // Кнопка, которая выбирает кисть, что бы рисовать.
         private void PaintButt(object sender, RoutedEventArgs e)
         {
-            Line line = new Line();
-            line.X1 = 0;
-            line.Y1 = 450;
-            line.X2 = 1000;
-            line.Y2 = 450;
-            line.Stroke = new SolidColorBrush(Colors.Black);
+            
         }
-
 
         private Stack<List<Line>> linesStack = new Stack<List<Line>>();
         private List<Line> lines;
-
-        private void CanvasMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            lines = new List<Line>();
-        }
-
         private double mouseX;
         private double mouseY;
 
-        private void CanvasMouseMove(object sender, MouseEventArgs e)
+        private void CanvasMouseDown(object sender, MouseButtonEventArgs e) => lines = new List<Line>(); // нажатие кнопки
+        private void CanvasMouseUp(object sender, MouseButtonEventArgs e) => linesStack.Push(lines); // отпускание кнопки
+
+        private void CanvasMouseMove(object sender, MouseEventArgs e) // Происходит когда пользователь держит ЛКМ и водит по Grid-у
         {
             if (e.GetPosition(canvas).X > 0
                 && e.GetPosition(canvas).Y > 0
                 && e.GetPosition(canvas).X < canvas.ActualWidth
                 && e.GetPosition(canvas).Y < canvas.ActualHeight)
             {
-
                 if (e.LeftButton == MouseButtonState.Pressed && lines != null)
                 {
                     Line line = new Line();
@@ -337,10 +330,62 @@ namespace PDFEditor
                 mouseY = e.GetPosition(canvas).Y;
             }
         }
+    }
 
-        private void CanvasMouseUp(object sender, MouseButtonEventArgs e)
+    // Добавление строки (не работает)
+    public partial class MainWindow
+    {
+        // Кнопка, которая добавляет строку 
+        private void AddLineButt(object sender, RoutedEventArgs e)
         {
-            linesStack.Push(lines);
+
+        }
+
+        // Там к TextBox нужно дописать MouseLeftButtonDown="myTextBoxMouseLeftButtonDown" что бы работало, наверное
+
+        /*
+         <TextBox Background="Transparent" FontSize="20" Grid.Row="2"
+             Grid.Column="1" Margin="48,21,962,595" Grid.RowSpan="2"/>
+         */
+
+        /* Написано ИИ
+        private bool isDragging = false;
+        private Point lastPosition;
+
+        private void myTextBox_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            isDragging = true;
+            lastPosition = e.GetPosition(myTextBox);
+            myTextBox.CaptureMouse();
+        }
+
+        private void myTextBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                Point newPosition = e.GetPosition(this);
+                double deltaX = newPosition.X - lastPosition.X;
+                double deltaY = newPosition.Y - lastPosition.Y;
+                myTextBox.Margin = new Thickness(myTextBox.Margin.Left + deltaX, myTextBox.Margin.Top + deltaY, 0, 0);
+                lastPosition = newPosition;
+            }
+        }
+
+        private void myTextBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            isDragging = false;
+            myTextBox.ReleaseMouseCapture();
+        }*/
+
+    }
+
+    // Добавление картинки (не работает)
+    public partial class MainWindow
+    {
+        // Кнопка, которая добавляет картинку 
+        private void AddImageButt(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
