@@ -5,6 +5,9 @@ packages/IronPdf.Native.Chrome.Windows.2023.1.11387/runtimes/win-x64/native/libE
 PDFEditor/bin/Debug/runtimes/win-x64/native/libcef.dll
 PDFEditor/bin/Debug/runtimes/win-x86/native/libcef.dll
 packages/IronPdf.Native.Chrome.Windows.2023.1.11387/IronPdf.Native.Chrome.Windows.2023.1.11387.nupkg
+packages/IronPdf.Native.Chrome.Windows.2023.3.12968/IronPdf.Native.Chrome.Windows.2023.3.12968.nupkg
 packages/IronPdf.Native.Chrome.Windows.2023.1.11387/runtimes/win-x86/native/libcef.dll
 PDFEditor/bin/Release/runtimes/win-x64/native/libcef.dll
 PDFEditor/bin/Release/runtimes/win-x86/native/libcef.dll
+packages/IronPdf.Native.Chrome.Windows.2023.3.12968/runtimes/win-x64/native/libcef.dll
+packages/IronPdf.Native.Chrome.Windows.2023.3.12968/runtimes/win-x86/native/libcef.dll

@@ -10,7 +10,6 @@
         AllowDrop="True"  MinWidth="900" MinHeight="769"
         Drop="MainPanel_Drop">
     <Window.Resources>
-
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -110,7 +109,7 @@
           MouseMove="CanvasMouseMove" 
           MouseUp="CanvasMouseUp">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="330"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -127,61 +126,86 @@
         <Border Grid.Column="1" Grid.Row="2" Background="#fcf0d9"/>
         <Border Grid.Column="1" Grid.Row="3" Background="#fcf0d9"/>
 
+        <ScrollViewer Grid.Row="3">
+            <Grid Name="PrintPagePanel"/>
+        </ScrollViewer>
+        
+
 
         <Image Name="PictureBox" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2"/>
 
-        <Viewbox Width="{Binding ActualWidth, ElementName=PictureBox}" Height="{Binding ActualHeight, ElementName=PictureBox}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" Stretch="Fill">
-            <Canvas Width="500" Height="700" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" Name="canvas"/>
+        <Viewbox Width="{Binding ActualWidth, ElementName=PictureBox}" 
+                 Height="{Binding ActualHeight, ElementName=PictureBox}" 
+                 VerticalAlignment="Center" HorizontalAlignment="Center" 
+                 Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" Stretch="Fill">
+            <Canvas Width="500" Height="700" Grid.Column="1" Grid.Row="2" 
+                    Grid.RowSpan="2" Name="canvas"/>
         </Viewbox>
 
-        <Button Click="Button_Click_Next" Content="&gt;" Margin="196,3,3,3" Grid.Row="2" Style="{DynamicResource ResourceKey=ButtonStyle}"/>
-        <Button Click="Button_Click_Back" Content="&lt;" Margin="3,3,196,3" Grid.Row="2" Style="{DynamicResource ResourceKey=ButtonStyle}"/>
-        <Label Name="nowPage" Content="0" Grid.Row="2" Margin="44,3,130,3" FontSize="23" HorizontalContentAlignment="Center"/>
-        <Label Name="allPages" Content="0" Grid.Row="2" Margin="133,3,44,3" FontSize="23" HorizontalContentAlignment="Center"/>
-        <Label Content="/"  Grid.Row="2" Margin="110,3,107,3" FontSize="23" HorizontalContentAlignment="Center"/>
+        <Button Click="Button_Click_Back" Content="&lt;" Margin="3,3,281,3"
+                Grid.Row="2" Style="{DynamicResource ResourceKey=ButtonStyle}" FontSize="16" FontWeight="Bold"/>
+        <Label Name="nowPage" Content="0" Grid.Row="2" Margin="49,3,180,3"
+               FontSize="23" HorizontalContentAlignment="Center"/>
+        <Label Content="/"  Grid.Row="2" Margin="150,3,150,3" FontSize="23"
+               HorizontalContentAlignment="Center"/>
+        <Label Name="allPages" Content="0" Grid.Row="2" Margin="180,3,49,3"
+               FontSize="23" HorizontalContentAlignment="Center"/>
+        <Button Click="Button_Click_Next" Content="&gt;" Margin="281,3,3,3"
+                Grid.Row="2" Style="{DynamicResource ResourceKey=ButtonStyle}" FontSize="16" FontWeight="Bold"/>
+
 
         <Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,0">
-            <ToggleButton Name="saveButton" IsEnabled="False" Click="SaveButt" Margin="10,10,0,10" HorizontalAlignment="Left" Width="55" Style="{DynamicResource ResourceKey=ToggleButtonStyle}">
+            <ToggleButton Name="saveButton" IsEnabled="False" Click="SaveButt" 
+                          Margin="10,10,0,10" HorizontalAlignment="Left" Width="55" 
+                          Style="{DynamicResource ResourceKey=ToggleButtonStyle}">
                 <Grid>
-                    <Label Foreground="#7f685b" Margin="-7,0,-9,-3" VerticalAlignment="Bottom" FontSize="10" Content="Сохранить"/>
-                    <Image Margin="0,1,0,14" Source="F:\progi govna\ProjectForSchool\PDFEditor\PDFEditor\explorer.png"/>
+                    <Label Foreground="#7f685b" Margin="-7,0,-9,-3" 
+                           VerticalAlignment="Bottom" FontSize="10" Content="Сохранить"/>
+                    <Image Margin="0,1,0,14" Source="pack://application:,,,/Resources/explorer.png" />
                 </Grid>
             </ToggleButton>
-            <ToggleButton Name="addLineButton" IsEnabled="False" Click="AddLineButt" Margin="75,10,110,10" HorizontalAlignment="Left" Width="75" Style="{DynamicResource ResourceKey=ToggleButtonStyle}">
+            <ToggleButton Name="addLineButton" IsEnabled="False" Click="AddLineButt" 
+                          Margin="75,10,110,10" HorizontalAlignment="Left" Width="75" 
+                          Style="{DynamicResource ResourceKey=ToggleButtonStyle}">
                 <Grid>
-                    <Label Foreground="#7f685b" FontSize="9" Margin="-8,0,-9,-7" VerticalAlignment="Bottom"  Content="Добавить строку" Height="25"/>
-                    <Image Margin="0,1,0,12" Source="F:\progi govna\ProjectForSchool\PDFEditor\PDFEditor\letter.png"/>
+                    <Label Foreground="#7f685b" FontSize="9" Margin="-8,0,-9,-7" 
+                           VerticalAlignment="Bottom"  Content="Добавить строку" Height="25"/>
+                    <Image Margin="0,1,0,12" Source="pack://application:,,,/Resources/letter.png"/>
                 </Grid>
             </ToggleButton>
-            <ToggleButton Name="addImageButton" IsEnabled="False" Click="AddImageButt" Margin="165,10,45,10" HorizontalAlignment="Left" Width="75" Style="{DynamicResource ResourceKey=ToggleButtonStyle}">
+            <ToggleButton Name="addImageButton" IsEnabled="False" Click="AddImageButt" 
+                          Margin="165,10,45,10" HorizontalAlignment="Left" Width="75" 
+                          Style="{DynamicResource ResourceKey=ToggleButtonStyle}">
                 <Grid>
-                    <Label Foreground="#7f685b" Margin="-8,0,-8,-4" VerticalAlignment="Bottom" FontSize="10" Content="Добавить фото"/>
-                    <Image Margin="0,1,0,14" Source="F:\progi govna\ProjectForSchool\PDFEditor\PDFEditor\image.png"/>
+                    <Label Foreground="#7f685b" Margin="-8,0,-8,-4" VerticalAlignment="Bottom" 
+                           FontSize="10" Content="Добавить фото"/>
+                    <Image Margin="0,1,0,14" Source="pack://application:,,,/Resources/image.png"/>
                 </Grid>
             </ToggleButton>
-            <ToggleButton Name="paintButt" IsEnabled="True" Click="PaintButt" Margin="255,10,10,10" HorizontalAlignment="Left" Width="55" Style="{DynamicResource ResourceKey=ToggleButtonStyle}">
+            <ToggleButton Name="paintButt" IsEnabled="False" Click="PaintButt" 
+                          Margin="255,10,10,10" HorizontalAlignment="Left" Width="55" 
+                          Style="{DynamicResource ResourceKey=ToggleButtonStyle}">
                 <Grid>
-                    <Label Foreground="#7f685b" Margin="-3,0,-4,-4" VerticalAlignment="Bottom" FontSize="12" Content="Кисть" Height="24"/>
-                    <Image Margin="0,1,0,14" Source="F:\progi govna\ProjectForSchool\PDFEditor\PDFEditor\paint.png"/>
+                    <Label Foreground="#7f685b" Margin="-3,0,-4,-4" VerticalAlignment="Bottom" 
+                           FontSize="12" Content="Кисть" Height="24"/>
+                    <Image Margin="0,1,0,14" Source="pack://application:,,,/Resources/paint.png"/>
                 </Grid>
             </ToggleButton>
         </Grid>
 
         <Menu Margin="0,0,0,0" Grid.ColumnSpan="2" Background="#a17a6f">
-            <Image/>
             <MenuItem Foreground="#393740" Background="#e9cfac" Margin="3,3,3,3" Height="18" Width="45" Header="Файл">
                 <MenuItem Name="saveMenuItem" IsEnabled="False" Header="Сохранить" Click="MenuSave"/>
                 <MenuItem Name="saveHowMenuItem" IsEnabled="False" Header="Сохранить Как" Click="MenuSaveHow"/>
-                <MenuItem Name="saveAllMenuItem" IsEnabled="False" Header="Сохранить Всё" Click="MenuSaveAll"/>
                 <MenuItem Header="Открыть" Click="MenuOpen"/>
-                <MenuItem Header="Добавить файл" Click="MenuAddFile"/>
             </MenuItem>
             <MenuItem Foreground="#393740" Background="#e9cfac" Margin="3,3,3,3" Height="18" Width="95" Header="Редактировать">
                 <MenuItem Name="cancelMenuItem" IsEnabled="False" Header="Отменить действие" Click="MenuCancel"/>
                 <MenuItem Header="Вствить страницу" Click="MenuAddPage"/>
                 <MenuItem Name="deleteMenuItem" IsEnabled="False" Header="Удалить страницу" Click="MenuDeletePage"/>
             </MenuItem>
-            <MenuItem Foreground="#393740" Name="convertMenuItem" Background="#e9cfac" Margin="3,3,3,3" Height="18" Width="105" Header="Конвертировать" IsEnabled="False">
+            <MenuItem Foreground="#393740" Name="convertMenuItem" Background="#e9cfac" Margin="3,3,3,3" 
+                      Height="18" Width="105" Header="Конвертировать" IsEnabled="False">
                 <MenuItem Name="convertJpglMenuItem" IsEnabled="False" Header="В jpg" Click="MenuConvertToJPG"/>
                 <MenuItem Name="convertPnglMenuItem" IsEnabled="False" Header="В png" Click="MenuConvertToPNG"/>
             </MenuItem>
