@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="PDFEditor" 
         Height="800" Width="1447" 
-        AllowDrop="True"  MinWidth="900" MinHeight="769"
+        AllowDrop="True" MinWidth="900" MinHeight="769"
         Drop="MainPanel_Drop">
     <Window.Resources>
         <Style x:Key="FocusVisual">
@@ -104,7 +104,7 @@
         </Style>
     </Window.Resources>
     <Grid Name="MainPanel"
-          KeyDown="MainWindow_KeyDown" 
+          KeyDown="MainWindow_KeyDown"
           MouseDown="CanvasMouseDown" 
           MouseMove="CanvasMouseMove" 
           MouseUp="CanvasMouseUp">
@@ -129,8 +129,8 @@
         <ScrollViewer Grid.Row="3">
             <Grid Name="PrintPagePanel"/>
         </ScrollViewer>
-        
 
+        <TextBox FontSize="18" />
 
         <Image Name="PictureBox" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2"/>
 
@@ -173,17 +173,8 @@
                     <Image Margin="0,1,0,12" Source="pack://application:,,,/Resources/letter.png"/>
                 </Grid>
             </ToggleButton>
-            <ToggleButton Name="addImageButton" IsEnabled="False" Click="AddImageButt" 
-                          Margin="165,10,45,10" HorizontalAlignment="Left" Width="75" 
-                          Style="{DynamicResource ResourceKey=ToggleButtonStyle}">
-                <Grid>
-                    <Label Foreground="#7f685b" Margin="-8,0,-8,-4" VerticalAlignment="Bottom" 
-                           FontSize="10" Content="Добавить фото"/>
-                    <Image Margin="0,1,0,14" Source="pack://application:,,,/Resources/image.png"/>
-                </Grid>
-            </ToggleButton>
             <ToggleButton Name="paintButt" IsEnabled="False" Click="PaintButt" 
-                          Margin="255,10,10,10" HorizontalAlignment="Left" Width="55" 
+                          Margin="165,10,45,10" HorizontalAlignment="Left" Width="55" 
                           Style="{DynamicResource ResourceKey=ToggleButtonStyle}">
                 <Grid>
                     <Label Foreground="#7f685b" Margin="-3,0,-4,-4" VerticalAlignment="Bottom" 
