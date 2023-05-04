@@ -18,7 +18,7 @@ namespace PDFEditor
     // Главный класс
     public partial class MainWindow : Window
     {
-        private Bitmap[] pagesPDFInBitmap; // Картинки в Bitmap формате
+        private List<Bitmap> pagesPDFInBitmap = new List<Bitmap>(); // Картинки в Bitmap формате
         private PdfDocument document; // Сам документ (пока один)
         string path; // Пути до PDF файлов
         private const int DPI = 96; // Качество картинок
@@ -44,8 +44,16 @@ namespace PDFEditor
         {
             // Выгружаем картинку страницы из файла
             Bitmap imageBmp = new Bitmap(document.PageToBitmap(page, DPI));
-            pagesPDFInBitmap[page] = imageBmp; // Сохраняем лист в массив
+            //pagesPDFInBitmap[page] = imageBmp; // Сохраняем лист в массив
             return ConvertToBitmapSource(imageBmp); // Конвертируем из Bitmap в BitmapSource;
+        }
+
+        private void FillListBitmap()
+        {
+            for (int i = 0; i < document.PageCount; i++)
+            {
+                pagesPDFInBitmap.Add(new Bitmap(document.PageToBitmap(i, DPI)));
+            }
         }
 
         // Сохраняем PDF файл и выводим его
@@ -53,8 +61,9 @@ namespace PDFEditor
         {
             // Создаём документ по путю
             document = new PdfDocument(path);
-            // Так же указываем размеры массива, где лежат все листы, только уже в формате Bitmap
-            pagesPDFInBitmap = new Bitmap[document.PageCount];
+            pagesPDFInBitmap.Clear();
+            docPageNow = 0;
+            FillListBitmap();
             // Отображаем сколько всего страниц в документе
             allPages.Content = document.PageCount;
             // Указываем начальную страницу какую страницу программа отрисует первой (по стандарту 1 страница)
@@ -74,6 +83,9 @@ namespace PDFEditor
         // Вывод страниц, находящихся по соседству, текущей страницы (столбец слева снизу)
         private void PrintPagePdf()
         {
+            PrintPagePanel.Children.Clear();
+            PrintPagePanel.RowDefinitions.Clear();
+            PrintPagePanel.Children.Clear();
             for (int i = 0; i < document.PageCount; i++)
             {
                 Image img = new Image();
@@ -121,7 +133,7 @@ namespace PDFEditor
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true;
-            if (e.Key != Key.Right && e.Key != Key.Left && e.Key != Key.Z && Keyboard.Modifiers != ModifierKeys.Control)
+            if (e.Key != Key.Right && e.Key != Key.Left || e.Key != Key.Z && Keyboard.Modifiers != ModifierKeys.Control)
             {
                 e.Handled = false;
                 return;
@@ -243,7 +255,18 @@ namespace PDFEditor
         // Удалить страницу
         private void MenuDeletePage(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                document.RemovePage(docPageNow);
+                pagesPDFInBitmap.RemoveAt(docPageNow);
+                canvas.Children.Clear();
+                docPageNow = docPageNow < document.PageCount ? docPageNow : document.PageCount - 1;
+                nowPage.Content = docPageNow + 1;
+                PictureBox.Source = ConvertPDFtoImage(docPageNow);
+                allPages.Content = pagesPDFInBitmap.Count.ToString();
+                PrintPagePdf();
+            }
+            catch { }
         }
 
         // Конвертировать PDF в JPG
@@ -260,7 +283,7 @@ namespace PDFEditor
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     SavePage(false);
-                    for (int i = 0; i < pagesPDFInBitmap.Length - 1; i++)
+                    for (int i = 0; i < pagesPDFInBitmap.Count - 1; i++)
                     {
                         pagesPDFInBitmap[i].Save(dialog.SelectedPath + $"\\{fileName}{i+1}{extension}");
                     }
@@ -281,6 +304,7 @@ namespace PDFEditor
         // Функция для сохранения файла
         private void SaveFile()
         {
+            document.SaveAs(path);
             SaveBitmapInDocumment();
             document.SaveAs(path);
             MessageBox.Show("Файл успешно сохранён!");
@@ -295,8 +319,10 @@ namespace PDFEditor
 
             if (sfd.ShowDialog() == true)
             {
+                document.SaveAs(sfd.FileName);
                 SaveBitmapInDocumment();
                 document.SaveAs(sfd.FileName);
+                path = sfd.FileName;
             }
         }
 
@@ -495,43 +521,6 @@ namespace PDFEditor
         {
             
         }
-
-        // Там к TextBox нужно дописать MouseLeftButtonDown="myTextBoxMouseLeftButtonDown" что бы работало, наверное
-
-        /*
-         <TextBox Background="Transparent" FontSize="20" Grid.Row="2"
-             Grid.Column="1" Margin="48,21,962,595" Grid.RowSpan="2"/>
-         */
-
-        /* Написано ИИ
-        private bool isDragging = false;
-        private Point lastPosition;
-
-        private void myTextBox_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            isDragging = true;
-            lastPosition = e.GetPosition(myTextBox);
-            myTextBox.CaptureMouse();
-        }
-
-        private void myTextBox_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (isDragging)
-            {
-                Point newPosition = e.GetPosition(this);
-                double deltaX = newPosition.X - lastPosition.X;
-                double deltaY = newPosition.Y - lastPosition.Y;
-                myTextBox.Margin = new Thickness(myTextBox.Margin.Left + deltaX, myTextBox.Margin.Top + deltaY, 0, 0);
-                lastPosition = newPosition;
-            }
-        }
-
-        private void myTextBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            isDragging = false;
-            myTextBox.ReleaseMouseCapture();
-        }*/
-
     }
 
     // Добавление картинки (не работает)

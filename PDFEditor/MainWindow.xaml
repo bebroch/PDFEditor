@@ -192,7 +192,6 @@
             </MenuItem>
             <MenuItem Foreground="#393740" Background="#e9cfac" Margin="3,3,3,3" Height="18" Width="95" Header="Редактировать">
                 <MenuItem Name="cancelMenuItem" IsEnabled="False" Header="Отменить действие" Click="MenuCancel"/>
-                <MenuItem Header="Вствить страницу" Click="MenuAddPage"/>
                 <MenuItem Name="deleteMenuItem" IsEnabled="False" Header="Удалить страницу" Click="MenuDeletePage"/>
             </MenuItem>
             <MenuItem Foreground="#393740" Name="convertMenuItem" Background="#e9cfac" Margin="3,3,3,3" 

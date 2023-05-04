@@ -221,3 +221,12 @@ F:\progi govna\ProjectForSchool\PDFEditor\PDFEditor\bin\Debug\System.Security.Pr
 F:\progi govna\ProjectForSchool\PDFEditor\PDFEditor\bin\Debug\System.Text.Encoding.CodePages.xml
 F:\progi govna\ProjectForSchool\PDFEditor\PDFEditor\bin\Debug\System.Drawing.Common.xml
 F:\progi govna\ProjectForSchool\PDFEditor\PDFEditor\obj\Debug\PDFEditor.exe.config
+F:\progi govna\ProjectForSchool\PDFEditor\GitHubPdfEditor\PDFEditor\obj\Debug\PDFEditor.csproj.AssemblyReference.cache
+F:\progi govna\ProjectForSchool\PDFEditor\GitHubPdfEditor\PDFEditor\obj\Debug\PDFEditor.exe.config
+F:\progi govna\ProjectForSchool\PDFEditor\GitHubPdfEditor\PDFEditor\obj\Debug\MainWindow.g.cs
+F:\progi govna\ProjectForSchool\PDFEditor\GitHubPdfEditor\PDFEditor\obj\Debug\App.g.cs
+F:\progi govna\ProjectForSchool\PDFEditor\GitHubPdfEditor\PDFEditor\obj\Debug\PDFEditor_Content.g.cs
+F:\progi govna\ProjectForSchool\PDFEditor\GitHubPdfEditor\PDFEditor\obj\Debug\PDFEditor_MarkupCompile.cache
+F:\progi govna\ProjectForSchool\PDFEditor\GitHubPdfEditor\PDFEditor\obj\Debug\PDFEditor_MarkupCompile.lref
+F:\progi govna\ProjectForSchool\PDFEditor\GitHubPdfEditor\PDFEditor\obj\Debug\PDFEditor.exe
+F:\progi govna\ProjectForSchool\PDFEditor\GitHubPdfEditor\PDFEditor\obj\Debug\PDFEditor.pdb
